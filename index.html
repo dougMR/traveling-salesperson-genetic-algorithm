@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <script src="./draw.js" defer></script>
+        <script src="./math.js"></script>
+        <script src="./tsp.js" defer></script>
+        <link rel="stylesheet" href="style.css" />
+        <title>The Traveling Salesman | Genetic Algorithm</title>
+    </head>
+    <body>
+        <header><h1>Traveling Salesperson Problem</h1>
+            <h3>genetic-algorithm solution</h3>
+        </header>
+        <div id="controls">
+            <label for="num-points">NUMBER OF POINTS</label>
+            <input id="num-cities" type="number" name="num-points" id="points-num"  step="1" value="7" >&nbsp;&nbsp;
+            &nbsp;            <button id="run-tsp" >GO!</button>
+            <button id="stop-tsp" >Stop.</button>
+        </div>
+        <div id="output">HELLO WORLD</div>
+        <div id="canvas-holder">
+            <canvas id="drawing-board"> </canvas>
+            <br/>
+            <canvas id="drawing-board-2"> </canvas>
+        </div>
+
+        <script>
+
+            const tspButton = document.getElementById("run-tsp");
+            const tspStopButton = document.getElementById("stop-tsp");
+
+            let canvasScale = 1;
+
+            const resizeCanvas = (evt) => {
+                // console.log('resizeCanvas()');
+                const baseWidth = 300;
+                const drawingBoard = document.getElementById("drawing-board");
+                const drawingBoard2 = document.getElementById("drawing-board-2");
+                const holderWidth = document.getElementById("canvas-holder").offsetWidth;
+                // console.log('holderWIdth: ',holderWidth);
+                // console.log('window.innerHeight: ',window.innerHeight);
+                // console.log(document.querySelector('header').offsetHeight);
+                // console.log(document.querySelector('#controls').offsetHeight);
+                // console.log(document.querySelector('#output').offsetHeight);
+                const availableHeight = window.innerHeight - (document.querySelector('header').offsetHeight + document.querySelector('#controls').offsetHeight + document.querySelector('#output').offsetHeight) - 20;
+                // console.log('availableHeight: ',availableHeight);
+
+                const minDimension = Math.min(holderWidth, availableHeight );
+                // console.log('minDimension: ',minDimension);
+
+                const canvasWidth = minDimension;
+                drawingBoard.width = drawingBoard2.width = canvasWidth;
+                drawingBoard.height = drawingBoard2.height = canvasWidth;
+                canvasScale = canvasWidth / baseWidth;
+            };
+            window.addEventListener("resize", resizeCanvas);
+            resizeCanvas();
+        </script>
+    </body>
+</html>
