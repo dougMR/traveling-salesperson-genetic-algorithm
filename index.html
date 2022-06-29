@@ -13,7 +13,7 @@
     <body>
         <header>
             <h1>Traveling Salesperson Problem</h1>
-            <h3>genetic-algorithm solution</h3>
+            <h3>side-by-side comparison</h3>
         </header>
         <div id="controls">
             <label for="num-points">NUMBER OF POINTS</label>
@@ -26,8 +26,9 @@
                 value="6"
             />&nbsp;&nbsp; &nbsp; <button id="run-tsp">GO!</button>
             <button id="stop-tsp">Stop.</button>
+            <div id="output">HELLO WORLD</div>
         </div>
-        <div id="output">HELLO WORLD</div>
+
         <div id="canvas-holder">
             <div class="canvas-holder">
                 <div id="canvas-1-output">C1</div>
@@ -53,7 +54,9 @@
                     document.getElementById("drawing-board-2");
                 const holderWidth =
                     document.getElementById("canvas-holder").offsetWidth;
-                const holderDivs = Array.from(document.querySelectorAll('.canvas-holder'));
+                const holderDivs = Array.from(
+                    document.querySelectorAll(".canvas-holder")
+                );
                 // console.log('holderWIdth: ',holderWidth);
                 // console.log('window.innerHeight: ',window.innerHeight);
                 // console.log(document.querySelector('header').offsetHeight);
@@ -62,9 +65,7 @@
                 const availableHeight =
                     window.innerHeight -
                     (document.querySelector("header").offsetHeight +
-                        document.querySelector("#controls").offsetHeight +
-                        document.querySelector("#output").offsetHeight) -
-                    20;
+                        document.querySelector("#controls").offsetHeight);
                 // console.log('availableHeight: ',availableHeight);
                 // console.log('holderWidth: ',holderWidth);
                 let minDimension;
@@ -72,16 +73,21 @@
                 // Choose side-by-side or top/bottom
                 if (holderWidth > availableHeight) {
                     // side-by-side
-                     minDimension = (holderWidth * 0.9) / 2;
+                    minDimension = (holderWidth * 0.9) / 2;
                 } else {
                     // stacked
-                     minDimension = (availableHeight * 0.9) / 2
+                    minDimension = (availableHeight * 0.9) / 2;
                 }
 
                 const canvasWidth = Math.round(minDimension);
-                for( const hd of holderDivs){
+                for (const hd of holderDivs) {
+                    if(holderWidth > availableHeight){
+                        hd.style.width = canvasWidth + "px";
+                    } else {
+                        hd.style.width = "100%";
+                        hd.style.textAlign = "center";
+                    }
                     
-                    hd.style.width = canvasWidth+"px";
                 }
                 drawingBoard.width = drawingBoard2.width = canvasWidth;
                 // drawingBoard.setAttribute('width',canvasWidth);

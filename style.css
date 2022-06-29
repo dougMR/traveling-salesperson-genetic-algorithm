@@ -47,9 +47,16 @@ header,
 #canvas-2-output,
 #output {
     color: #fff;
-
     line-height: 1.5em;
     font-family: "Courier New", Courier, monospace;
+    text-align: left;
+}
+#output {
+    text-align: center;
+    color: #eee;
+    /* font-weight: bold; */
+    letter-spacing: 1px;
+    font-family: sans-serif;
 }
 
 #canvas-holder {

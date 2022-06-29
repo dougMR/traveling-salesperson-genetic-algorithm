@@ -347,7 +347,7 @@ const runTsp = (evt) => {
     const cities = generateCities(numCities);
     op.innerHTML =  `<span style="font-family: sans-serif;">${
         cities.length
-    } points (plus static end points)`;
+    } points - plus static end points`;
     // const numCities = document.getElementById("num-cities").value;
     // const cities = generateCities(numCities);
     // getShortestOrder(cities);
