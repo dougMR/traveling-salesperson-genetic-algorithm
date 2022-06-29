@@ -11,24 +11,35 @@
         <title>The Traveling Salesman | Genetic Algorithm</title>
     </head>
     <body>
-        <header><h1>Traveling Salesperson Problem</h1>
+        <header>
+            <h1>Traveling Salesperson Problem</h1>
             <h3>genetic-algorithm solution</h3>
         </header>
         <div id="controls">
             <label for="num-points">NUMBER OF POINTS</label>
-            <input id="num-cities" type="number" name="num-points" id="points-num"  step="1" value="7" >&nbsp;&nbsp;
-            &nbsp;            <button id="run-tsp" >GO!</button>
-            <button id="stop-tsp" >Stop.</button>
+            <input
+                id="num-cities"
+                type="number"
+                name="num-points"
+                id="points-num"
+                step="1"
+                value="6"
+            />&nbsp;&nbsp; &nbsp; <button id="run-tsp">GO!</button>
+            <button id="stop-tsp">Stop.</button>
         </div>
         <div id="output">HELLO WORLD</div>
         <div id="canvas-holder">
-            <canvas id="drawing-board"> </canvas>
-            <br/>
-            <canvas id="drawing-board-2"> </canvas>
+            <div class="canvas-holder">
+                <div id="canvas-1-output">C1</div>
+                <canvas id="drawing-board" width="300" height="300"> </canvas>
+            </div>
+            <div class="canvas-holder">
+                <div id="canvas-2-output">C2</div>
+                <canvas id="drawing-board-2" width="300" height="300"></canvas>
+            </div>
         </div>
 
         <script>
-
             const tspButton = document.getElementById("run-tsp");
             const tspStopButton = document.getElementById("stop-tsp");
 
@@ -38,25 +49,47 @@
                 // console.log('resizeCanvas()');
                 const baseWidth = 300;
                 const drawingBoard = document.getElementById("drawing-board");
-                const drawingBoard2 = document.getElementById("drawing-board-2");
-                const holderWidth = document.getElementById("canvas-holder").offsetWidth;
+                const drawingBoard2 =
+                    document.getElementById("drawing-board-2");
+                const holderWidth =
+                    document.getElementById("canvas-holder").offsetWidth;
+                const holderDivs = Array.from(document.querySelectorAll('.canvas-holder'));
                 // console.log('holderWIdth: ',holderWidth);
                 // console.log('window.innerHeight: ',window.innerHeight);
                 // console.log(document.querySelector('header').offsetHeight);
                 // console.log(document.querySelector('#controls').offsetHeight);
                 // console.log(document.querySelector('#output').offsetHeight);
-                const availableHeight = window.innerHeight - (document.querySelector('header').offsetHeight + document.querySelector('#controls').offsetHeight + document.querySelector('#output').offsetHeight) - 20;
+                const availableHeight =
+                    window.innerHeight -
+                    (document.querySelector("header").offsetHeight +
+                        document.querySelector("#controls").offsetHeight +
+                        document.querySelector("#output").offsetHeight) -
+                    20;
                 // console.log('availableHeight: ',availableHeight);
+                // console.log('holderWidth: ',holderWidth);
+                let minDimension;
+                // const isVertical = holderWidth < availableHeight;
+                // Choose side-by-side or top/bottom
+                if (holderWidth > availableHeight) {
+                    // side-by-side
+                     minDimension = (holderWidth * 0.9) / 2;
+                } else {
+                    // stacked
+                     minDimension = (availableHeight * 0.9) / 2
+                }
 
-                const minDimension = Math.min(holderWidth, availableHeight );
-                // console.log('minDimension: ',minDimension);
-
-                const canvasWidth = minDimension;
+                const canvasWidth = Math.round(minDimension);
+                for( const hd of holderDivs){
+                    
+                    hd.style.width = canvasWidth+"px";
+                }
                 drawingBoard.width = drawingBoard2.width = canvasWidth;
+                // drawingBoard.setAttribute('width',canvasWidth);
+                // drawingBoard.setAttribute('height',canvasWidth);
                 drawingBoard.height = drawingBoard2.height = canvasWidth;
                 canvasScale = canvasWidth / baseWidth;
             };
-            window.addEventListener("resize", resizeCanvas);
+            // window.addEventListener("resize", resizeCanvas);
             resizeCanvas();
         </script>
     </body>

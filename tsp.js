@@ -2,6 +2,8 @@
 // https://www.youtube.com/watch?v=r_SpBy9fQuo
 
 const op = document.getElementById("output");
+const cop1 = document.getElementById("canvas-1-output");
+const cop2 = document.getElementById("canvas-2-output");
 
 const swap = (vals, i, j) => {
     const temp = vals[i];
@@ -101,16 +103,16 @@ const getShortestOrderWithEndpoints = (points) => {
 
     const startIndex = 0;
     const endIndex = order.length - 1;
-    const startPoint = points[0];
-    const endPoint = points[points.length - 1];
+    // const startPoint = points[0];
+    // const endPoint = points[points.length - 1];
     order = order.slice(1, order.length - 1);
 
     const totalWays = factorialize(order.length);
     const bestOrder = [...order];
 
     let nextOrder = [...order];
-    // let fullOrder = [startIndex, ...nextOrder, endIndex];
-    let fullOrder = [...nextOrder];
+    let fullOrder = [startIndex, ...nextOrder, endIndex];
+    // let fullOrder = [...nextOrder];
     // const numericEndings = ['th','st','nd','rd','th','th','th','th','th','th'];
     const permuteOrder = () => {
         tries++;
@@ -120,18 +122,16 @@ const getShortestOrderWithEndpoints = (points) => {
             tspRunning = false;
             setButtonsStyles();
         } else {
-            // fullOrder = [startIndex, ...nextOrder, endIndex];
-            let fullOrder = [...nextOrder];
+            fullOrder = [startIndex, ...nextOrder, endIndex];
+            // let fullOrder = [...nextOrder];
             // const numberEnding = numericEndings[tries % 10];
-            op.innerHTML = `<strong>${tries.toLocaleString(
+            cop2.innerHTML = `trial-and-error - 'brute-force'<br/><strong>${tries.toLocaleString(
                 "en-US"
             )}</strong> of <strong>${totalWays.toLocaleString(
                 "en-US"
-            )}</strong> ways for ${
-                points.length - 2
-            } points (plus static end points)<br/>• shortest path: <strong>${Math.round(
+            )}</strong> ways<br/>shortest path: <strong>${Math.round(
                 shortestDist
-            )}</strong> <span style="font-size: 1.1em; letter-spacing: -1px;">${bestOrder}</span><br/>• trying order: <span style="font-size: 1.4em; font-weight: bold;">${fullOrder}</span>`;
+            )}</strong> <span style="letter-spacing: -1px;">${bestOrder}</span>`;
             // console.log("points: ", points);
             // console.log("fullOrder: ", fullOrder);
             const dist = calcTotalDistance(points, fullOrder);
@@ -187,12 +187,35 @@ const setButtonsStyles = () => {
 
 const getShortestOrderByGeneticAlgorithmWithEndpoints = (points) => {
 
+    const addIndexes = (order) => {
+        return [startIndex, ...order, endIndex];
+    }
+    const stripIndexes = (order) => {
+        const newOrder = [...order];
+        newOrder.pop();
+        newOrder.shift();
+        return newOrder;
+    }
+    const addEndpoints = (points) => {
+        return [startPoint, ...points, endPoint];
+    }
+    const stripEndpoints = (points) => {
+        const newPoints = [...points];
+        newPoints.pop();
+        newPoints.shift();
+        return newPoints;
+    }
+
     const calculateFitness = () => {
         for (let p = 0; p < population.length; p++) {
-            const dist = calcTotalDistance(points, population[p]);
+            const dist = calcTotalDistance(points, addIndexes(population[p]));
             if (dist < shortestDist) {
                 shortestDist = dist;
                 bestOrder = [...population[p]];
+                numMutations = 1;
+            } else {
+                numMutations ++;
+                numMutations = Math.min(numMutations, Math.round(order.length / 2));
             }
             fitness[p] = dist === 0 ? 0 : 1 / dist;
         }
@@ -217,7 +240,7 @@ const getShortestOrderByGeneticAlgorithmWithEndpoints = (points) => {
             // const orderA = pickOneByFitness(population);
             // const orderB = pickOneByFitness(population);
             // const order = crossover(orderA, orderB);
-            mutate(order);
+            shuffle(order,numMutations);
             newPopulation[p] = order;
         }
         population.length = 0;
@@ -259,10 +282,15 @@ const getShortestOrderByGeneticAlgorithmWithEndpoints = (points) => {
     const population = [];
     let tries = 0;
     let shortestDist = Infinity;
+    let numMutations = 1;
     let order = [];
     for (let o = 0; o < points.length; o++) {
         order[o] = o;
     }
+    const startIndex = 0;
+    const endIndex = order.length - 1;
+    order = stripIndexes([...order]);
+    
     let bestOrder = [...order];
 
     for (let p = 0; p < populationNum; p++) {
@@ -279,6 +307,7 @@ const getShortestOrderByGeneticAlgorithmWithEndpoints = (points) => {
             record = shortestDist;
             console.log('shortestDist: ',shortestDist);
             console.log('iterations: ',tries);
+            
         }
         nextGeneration();
         
@@ -287,13 +316,15 @@ const getShortestOrderByGeneticAlgorithmWithEndpoints = (points) => {
         setLineWeight(4);
         // console.log('points',points);
         // console.log('bestOrder: ',bestOrder);
-        drawPath(arrangePointsByOrder(points, bestOrder));
-        drawPointsNumbers(arrangePointsByOrder(points, bestOrder));
+        // console.log('bestOrder: ',bestOrder);
+        drawPath(arrangePointsByOrder(points, addIndexes(bestOrder)));
+        drawPointsNumbers(arrangePointsByOrder(points, addIndexes(bestOrder)));
     
         // setLineColor("grey");
         // setLineWeight(1);
         // drawPath(arrangePointsByOrder(points, nextOrder));
         tries ++;
+        cop1.innerHTML = `mutations - 'genetic algorithm'<br/> <strong>${tries}</strong> of <strong>${maxTries}</strong> passes<br/>shortest path: <strong>${Math.round(shortestDist)}</strong> ${addIndexes(bestOrder)}`;
         if(tries < maxTries ){
             requestAnimationFrame(evolve);
         } else {
@@ -303,16 +334,20 @@ const getShortestOrderByGeneticAlgorithmWithEndpoints = (points) => {
 
    requestAnimationFrame(evolve);
 };
-const numCities = document.getElementById("num-cities").value;
-const cities = generateCities(numCities);
+
 const populationNum = 100;
 const maxTries = 50;
-getShortestOrderByGeneticAlgorithmWithEndpoints(cities);
+
 
 
 const runTsp = (evt) => {
     // console.log(evt);
     tspRunning = true;
+    const numCities = document.getElementById("num-cities").value;
+    const cities = generateCities(numCities);
+    op.innerHTML =  `<span style="font-family: sans-serif;">${
+        cities.length
+    } points (plus static end points)`;
     // const numCities = document.getElementById("num-cities").value;
     // const cities = generateCities(numCities);
     // getShortestOrder(cities);
@@ -323,6 +358,7 @@ const runTsp = (evt) => {
         ...cities,
         endPoint,
     ]);
+    getShortestOrderByGeneticAlgorithmWithEndpoints([startPoint, ...cities, endPoint]);
     setButtonsStyles();
 };
 

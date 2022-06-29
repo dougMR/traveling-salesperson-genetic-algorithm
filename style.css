@@ -1,19 +1,19 @@
-
 :root {
     font-size: 10px + 1vw;
 }
-html,body{
+html,
+body {
     height: 100%;
 }
 
 body {
     background-color: #333;
-    font-family: 'Franklin Gothic Medium', Arial, sans-serif;
+    font-family: "Franklin Gothic Medium", Arial, sans-serif;
 }
 
 header {
     text-align: center;
-    color:#999;
+    color: #999;
     background-color: #eee;
     border-top-left-radius: 0.5rem;
     border-top-right-radius: 0.5rem;
@@ -43,23 +43,24 @@ header,
 #controls input {
     width: 2em;
 }
-
+#canvas-1-output,
+#canvas-2-output,
 #output {
     color: #fff;
 
     line-height: 1.5em;
-    font-family: 'Courier New', Courier, monospace;
+    font-family: "Courier New", Courier, monospace;
 }
 
 #canvas-holder {
     display: flex;
-    flex-direction: column;
+    flex-wrap: wrap;
     justify-content: center;
     align-items: center;
 }
 #drawing-board,
 #drawing-board-2 {
-    border: 1px solid #111;
+    border: 3px solid #111;
     box-sizing: border-box;
     background-color: #999;
 }
