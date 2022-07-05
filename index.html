@@ -23,9 +23,29 @@
                 name="num-points"
                 id="points-num"
                 step="1"
-                value="6"
+                value="16"
             />&nbsp;&nbsp; &nbsp; <button id="run-tsp">GO!</button>
             <button id="stop-tsp">Stop.</button>
+            <div>
+                <input
+                    type="checkbox"
+                    name="mutate"
+                    id="mutate-checkbox"
+                    checked
+                /><label for="mutate">run mutations</label>
+                <input
+                    type="checkbox"
+                    name="brute-force"
+                    id="brute-force-checkbox"
+                /><label for="brute-force">run brute force</label>
+            </div>
+            <div>
+                <input
+                    type="checkbox"
+                    name="same"
+                    id="same-points-checkbox"
+                /><label for="ame">use same points again</label>
+            </div>
             <div id="output">HELLO WORLD</div>
         </div>
 
@@ -43,7 +63,11 @@
         <script>
             const tspButton = document.getElementById("run-tsp");
             const tspStopButton = document.getElementById("stop-tsp");
-
+            const mutateCheckbox = document.getElementById("mutate-checkbox");
+            const bruteForceCheckbox = document.getElementById(
+                "brute-force-checkbox"
+            );
+            const samePointsCheckbox = document.getElementById("same-points-checkbox");
             let canvasScale = 1;
 
             const resizeCanvas = (evt) => {
@@ -81,13 +105,12 @@
 
                 const canvasWidth = Math.round(minDimension);
                 for (const hd of holderDivs) {
-                    if(holderWidth > availableHeight){
+                    if (holderWidth > availableHeight) {
                         hd.style.width = canvasWidth + "px";
                     } else {
                         hd.style.width = "100%";
                         hd.style.textAlign = "center";
                     }
-                    
                 }
                 drawingBoard.width = drawingBoard2.width = canvasWidth;
                 // drawingBoard.setAttribute('width',canvasWidth);

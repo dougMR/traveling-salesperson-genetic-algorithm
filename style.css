@@ -40,8 +40,8 @@ header,
     border-bottom-left-radius: 0.5rem;
     border-bottom-right-radius: 0.5rem;
 }
-#controls input {
-    width: 2em;
+#controls input[type="number"] {
+    width: 3em;
 }
 #canvas-1-output,
 #canvas-2-output,
@@ -50,6 +50,12 @@ header,
     line-height: 1.5em;
     font-family: "Courier New", Courier, monospace;
     text-align: left;
+}
+.output-title {
+    font-family: sans-serif;
+    font-weight: 200;
+    letter-spacing: 0.05em;
+    font-size: 0.9em;
 }
 #output {
     text-align: center;
