@@ -304,8 +304,10 @@ const getShortestOrderByGeneticAlgorithmWithEndpoints = (points) => {
         // console.log("numMutations: ", numMutations);
         // console.log('population.length: ',population.length);
         const newPopulation = [];
-        ordersTried.length = 0;
-        lookedForRepeat = 0;
+        // ordersTried.length = 0;
+        // foundRepeat = 0;
+        // lookedForRepeat = 0;
+        let numChecks = 0;
         for (let p = 0; p < population.length; p++) {
             // const newOrder = [...bestOrder];
             const oldOrder = [...population[p]];
@@ -321,6 +323,7 @@ const getShortestOrderByGeneticAlgorithmWithEndpoints = (points) => {
             
             let loops = 0;
             do {
+                numChecks++;
                 shuffle(newOrder, numMutations);
                 loops++;
             } while (
@@ -332,9 +335,10 @@ const getShortestOrderByGeneticAlgorithmWithEndpoints = (points) => {
                 newPopulation[p] = newOrder;
             } else {
                 newPopulation[p] = oldOrder;
-                console.log("no new order for this population");
+                // console.log("no new order for this population");
             }
         }
+        // console.log('numChecks: ',numChecks);
         population.length = 0;
         population.push(...newPopulation);
         // console.log('population.length 2: ',population.length);
@@ -373,20 +377,23 @@ const getShortestOrderByGeneticAlgorithmWithEndpoints = (points) => {
         shuffle(order, 1);
     };
 
-    let lookedForRepeat = 0;
-    let foundRepeat = 0;
-    let uniqueOrdersTried = 0;
+   
     const foundUsedOrder = () => {
         foundRepeat++;
-        op.innerHTML = `Found ${foundRepeat.toLocaleString(
-            "en-US"
-        )} repeats of ${lookedForRepeat.toLocaleString("en-US")} checks (${
-            Math.round((foundRepeat / lookedForRepeat) * 100) + "%"
-        })<br/>${uniqueOrdersTried.toLocaleString(
-            "en-US"
-        )} unique orders tried`;
+        // op.innerHTML = `Found ${foundRepeat.toLocaleString(
+        //     "en-US"
+        // )} repeats of ${lookedForRepeat.toLocaleString("en-US")} checks (${
+        //     Math.round((foundRepeat / lookedForRepeat) * 100) + "%"
+        // })<br/>${uniqueOrdersTried.toLocaleString(
+        //     "en-US"
+        // )} unique orders tried`;
     };
     const checkOrderAlreadyTried = (order) => {
+        for(const num of order){
+            if(typeof num !== "number"){
+                console.log('illegal order');
+            }
+        }
         let nextNestedArray = ordersTried;
         for (let i = 0; i < order.length; i++) {
             const index = order[i];
@@ -398,19 +405,15 @@ const getShortestOrderByGeneticAlgorithmWithEndpoints = (points) => {
                 }
                 nextNestedArray = nextNestedArray[index];
             } else {
-                op.innerHTML = `Found ${foundRepeat.toLocaleString(
-                    "en-US"
-                )} repeats of ${lookedForRepeat.toLocaleString("en-US")} checks (${
-                    Math.round((foundRepeat / lookedForRepeat) * 100) + "%"
-                })<br/>${uniqueOrdersTried.toLocaleString(
-                    "en-US"
-                )} unique orders tried`;
                 // reached endpoint, check if it's been used yet
                 lookedForRepeat++;
                 if (typeof nextNestedArray[index] != "number") {
                     // First time here
                     nextNestedArray[index] = 1;
                     uniqueOrdersTried++;
+                    if(uniqueOrdersTried >= permutations){
+                        evolveRunning = false;
+                    }
                     return false;
                 } else {
                     // Been here before
@@ -447,6 +450,9 @@ const getShortestOrderByGeneticAlgorithmWithEndpoints = (points) => {
     //     //     if()
     //     // }
     // };
+    let lookedForRepeat = 0;
+    let foundRepeat = 0;
+    let uniqueOrdersTried = 0;
 
     const ordersTried = [];
     const maxTries = Math.pow(points.length, 2);
@@ -455,6 +461,8 @@ const getShortestOrderByGeneticAlgorithmWithEndpoints = (points) => {
     console.log("maxTries: ", maxTries);
     console.log("populationNum: ", populationNum);
     console.log("maxCheckNewOrderLoops", maxCheckNewOrderLoops);
+
+    
 
     const fitness = [];
     const population = [];
@@ -465,6 +473,16 @@ const getShortestOrderByGeneticAlgorithmWithEndpoints = (points) => {
     for (let o = 0; o < points.length; o++) {
         order[o] = o;
     }
+
+    const permutations = factorialize(order.length-2);
+    console.log(order.length-2, 'factorial: ',permutations);
+
+    // order = [3,2,4,1,0];
+    // checkOrderAlreadyTried(order);
+    // let hasTried = checkOrderAlreadyTried(order);
+    // console.log('hasTried: ',hasTried);
+    // console.log('order: ',order);
+    // console.log(ordersTried);
     const startIndex = 0;
     const endIndex = order.length - 1;
     order = stripStartEndIndexes([...order]);
@@ -490,6 +508,15 @@ const getShortestOrderByGeneticAlgorithmWithEndpoints = (points) => {
             console.log("iterations: ", tries);
         }
         nextGeneration();
+        op.innerHTML = `Found ${foundRepeat.toLocaleString(
+            "en-US"
+        )} repeats of ${lookedForRepeat.toLocaleString("en-US")} checks (${
+            Math.round((foundRepeat / lookedForRepeat) * 100) + "%"
+        })<br/>${uniqueOrdersTried.toLocaleString(
+            "en-US"
+        )} of ${permutations.toLocaleString("en-US")} unique orders tried (${
+            Math.round((uniqueOrdersTried / permutations) * 100) + "%"
+        })`;
         clearCanvas();
         setLineColor("lime");
         setLineWeight(4);
@@ -515,6 +542,7 @@ const getShortestOrderByGeneticAlgorithmWithEndpoints = (points) => {
             evolveRunning = false;
             setButtonsStyles();
             console.log("ordersTried.length", ordersTried.length);
+            console.log(ordersTried);
         }
     };
 
