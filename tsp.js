@@ -87,7 +87,7 @@ const lexicalOrder = (vals) => {
 
     // SETP 3: swap
     swap(vals, largestI, largestJ);
-
+    if (largestI === -1) return -1;
     // STEP 4: reverse from largestI + 1 to the end
     const endArray = vals.splice(largestI + 1);
     endArray.reverse();
@@ -119,7 +119,7 @@ const getShortestOrderWithEndpoints = (points) => {
     // const numericEndings = ['th','st','nd','rd','th','th','th','th','th','th'];
     const permuteOrder = () => {
         tries++;
-
+        console.log("nextOrder: ", nextOrder);
         if (nextOrder === -1) {
             // return bestOrder;
             permuteRunning = false;
@@ -158,7 +158,10 @@ const getShortestOrderWithEndpoints = (points) => {
 
             // Get next permutation
 
-            lexicalOrder(nextOrder);
+            if (lexicalOrder(nextOrder) === -1) {
+                permuteRunning = false;
+                setButtonsStyles();
+            }
             // console.log("nextOrder: ", nextOrder);
 
             if (permuteRunning) requestAnimationFrame(permuteOrder);
@@ -202,10 +205,7 @@ const getShortestOrderByGeneticAlgorithmWithEndpoints = (points) => {
     const checkSwapEvery2Points = (order) => {
         // with every pair of points,
         // check if dist is shorter by swapping them
-        let shortestDist = calcTotalDistance(
-            points,
-            addStartEndIndexes(order)
-        );
+        let shortestDist = calcTotalDistance(points, addStartEndIndexes(order));
 
         let newOrder = [...order];
         let foundShorter = false;
@@ -249,7 +249,7 @@ const getShortestOrderByGeneticAlgorithmWithEndpoints = (points) => {
                     addStartEndIndexes(swappedOrder)
                 );
                 if (dist < shortestDist) {
-                    console.log('new shortest dist: ',dist);
+                    console.log("new shortest dist: ", dist);
                     shortestDist = dist;
                     newOrder = [...swappedOrder];
                     foundShorter = true;
@@ -320,7 +320,7 @@ const getShortestOrderByGeneticAlgorithmWithEndpoints = (points) => {
 
             // reset ordersTried.
             // it gets too long, but clearing it here we can check just that newPopulation doesn't repeat orders
-            
+
             let loops = 0;
             do {
                 numChecks++;
@@ -377,7 +377,6 @@ const getShortestOrderByGeneticAlgorithmWithEndpoints = (points) => {
         shuffle(order, 1);
     };
 
-   
     const foundUsedOrder = () => {
         foundRepeat++;
         // op.innerHTML = `Found ${foundRepeat.toLocaleString(
@@ -389,9 +388,9 @@ const getShortestOrderByGeneticAlgorithmWithEndpoints = (points) => {
         // )} unique orders tried`;
     };
     const checkOrderAlreadyTried = (order) => {
-        for(const num of order){
-            if(typeof num !== "number"){
-                console.log('illegal order');
+        for (const num of order) {
+            if (typeof num !== "number") {
+                console.log("illegal order");
             }
         }
         let nextNestedArray = ordersTried;
@@ -411,7 +410,7 @@ const getShortestOrderByGeneticAlgorithmWithEndpoints = (points) => {
                     // First time here
                     nextNestedArray[index] = 1;
                     uniqueOrdersTried++;
-                    if(uniqueOrdersTried >= permutations){
+                    if (uniqueOrdersTried >= permutations) {
                         evolveRunning = false;
                     }
                     return false;
@@ -424,7 +423,6 @@ const getShortestOrderByGeneticAlgorithmWithEndpoints = (points) => {
                 console.log("nextNestedArray[index]", nextNestedArray[index]);
             }
         }
-        
     };
     // const checkOrderAlreadyTried = (order) => {
     //     const index = Number(order.join(""));
@@ -462,8 +460,6 @@ const getShortestOrderByGeneticAlgorithmWithEndpoints = (points) => {
     console.log("populationNum: ", populationNum);
     console.log("maxCheckNewOrderLoops", maxCheckNewOrderLoops);
 
-    
-
     const fitness = [];
     const population = [];
     let tries = 0;
@@ -474,8 +470,8 @@ const getShortestOrderByGeneticAlgorithmWithEndpoints = (points) => {
         order[o] = o;
     }
 
-    const permutations = factorialize(order.length-2);
-    console.log(order.length-2, 'factorial: ',permutations);
+    const permutations = factorialize(order.length - 2);
+    console.log(order.length - 2, "factorial: ", permutations);
 
     // order = [3,2,4,1,0];
     // checkOrderAlreadyTried(order);
