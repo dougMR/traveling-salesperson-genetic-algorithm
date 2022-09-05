@@ -490,6 +490,11 @@ const getShortestOrderByGeneticAlgorithmWithEndpoints = (points) => {
         shuffle(population[p], 10);
     }
 
+    console.log("permutations: ",permutations);
+    console.log("population.length: ",population.length);
+    console.log("maxTries: ",maxTries);
+    // maxTries = Math.min(maxTries, Math.floor(permutations/population.length));
+
     let record = shortestDist;
     const evolve = () => {
         // console.log('evolve()');
@@ -528,7 +533,7 @@ const getShortestOrderByGeneticAlgorithmWithEndpoints = (points) => {
         // setLineWeight(1);
         // drawPath(arrangePointsByOrder(points, nextOrder));
         tries++;
-        cop1.innerHTML = `<span class="output-title">mutations - 'genetic algorithm'</span><br/> <strong>${tries}</strong> of <strong>${maxTries}</strong> passes<br/>shortest path: <strong>${Math.round(
+        cop1.innerHTML = `<span class="output-title">mutations - 'genetic algorithm'</span><br/> <strong>${tries}</strong> of <strong>${maxTries}</strong> (max) passes<br/>shortest path: <strong>${Math.round(
             shortestDist
         )}</strong> ${addStartEndIndexes(bestOrder)}`;
         if (tries < maxTries && evolveRunning) {
