@@ -490,9 +490,9 @@ const getShortestOrderByGeneticAlgorithmWithEndpoints = (points) => {
         shuffle(population[p], 10);
     }
 
-    console.log("permutations: ",permutations);
-    console.log("population.length: ",population.length);
-    console.log("maxTries: ",maxTries);
+    console.log("permutations: ", permutations);
+    console.log("population.length: ", population.length);
+    console.log("maxTries: ", maxTries);
     // maxTries = Math.min(maxTries, Math.floor(permutations/population.length));
 
     let record = shortestDist;
